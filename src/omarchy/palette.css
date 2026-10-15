@@ -1,0 +1,118 @@
+/* Source variables are owned by the companion; derived roles exist ONLY while
+   following. Inactive generated Blueprint therefore uses its exact literals. */
+html[data-omarchy-active="true"] {
+  --omarchy-page: var(--omarchy-background);
+  --omarchy-text: var(--omarchy-foreground);
+  --omarchy-role-accent: var(--omarchy-accent, var(--omarchy-blue, var(--omarchy-foreground)));
+  --omarchy-role-red: var(--omarchy-red, var(--omarchy-role-accent));
+  --omarchy-role-orange: var(--omarchy-orange, var(--omarchy-role-accent));
+  --omarchy-role-yellow: var(--omarchy-yellow, var(--omarchy-role-accent));
+  --omarchy-role-green: var(--omarchy-green, var(--omarchy-role-accent));
+  --omarchy-role-cyan: var(--omarchy-cyan, var(--omarchy-role-accent));
+  --omarchy-role-blue: var(--omarchy-blue, var(--omarchy-role-accent));
+  --omarchy-role-magenta: var(--omarchy-magenta, var(--omarchy-role-accent));
+  --omarchy-role-brown: var(--omarchy-brown, var(--omarchy-role-accent));
+
+  /* Terminal muted/shade colors need not contrast with a web panel. Readable
+     text and surfaces are deliberately derived from the required bg/fg pair. */
+  --omarchy-text-secondary: color-mix(in oklab, var(--omarchy-foreground) 94%, var(--omarchy-background));
+  --omarchy-text-disabled: color-mix(in oklab, var(--omarchy-foreground) 60%, var(--omarchy-background));
+  --omarchy-surface: color-mix(in oklab, var(--omarchy-background) 98%, var(--omarchy-foreground));
+  --omarchy-surface-raised: color-mix(in oklab, var(--omarchy-background) 97%, var(--omarchy-foreground));
+  --omarchy-inset: color-mix(in oklab, var(--omarchy-background) 98.5%, var(--omarchy-foreground));
+  --omarchy-hover: color-mix(in oklab, var(--omarchy-background) 94%, var(--omarchy-foreground));
+  --omarchy-active-surface: color-mix(in oklab, var(--omarchy-background) 92%, var(--omarchy-foreground));
+  --omarchy-disabled-surface: color-mix(in oklab, var(--omarchy-background) 95%, var(--omarchy-foreground));
+  --omarchy-border: color-mix(in oklab, var(--omarchy-foreground) 22%, var(--omarchy-background));
+  --omarchy-border-strong: color-mix(in oklab, var(--omarchy-foreground) 40%, var(--omarchy-background));
+  --omarchy-shadow: color-mix(in oklab, var(--omarchy-foreground) 20%, transparent);
+  --omarchy-gradient: color-mix(in oklab, var(--omarchy-foreground) 3%, transparent);
+  --omarchy-on-fill-overlay: color-mix(in oklab, var(--omarchy-background) 12%, transparent);
+
+  /* Accent remains the focus/indicator color. Text and filled actions mix in
+     foreground so pale terminal accents do not become pale text on light UI.
+     Filled actions use page/background ink, NOT unconditional white. */
+  --omarchy-accent-ink: color-mix(in oklab, var(--omarchy-role-accent) 30%, var(--omarchy-foreground));
+  --omarchy-red-ink: color-mix(in oklab, var(--omarchy-role-red) 30%, var(--omarchy-foreground));
+  --omarchy-orange-ink: color-mix(in oklab, var(--omarchy-role-orange) 30%, var(--omarchy-foreground));
+  --omarchy-yellow-ink: color-mix(in oklab, var(--omarchy-role-yellow) 30%, var(--omarchy-foreground));
+  --omarchy-green-ink: color-mix(in oklab, var(--omarchy-role-green) 30%, var(--omarchy-foreground));
+  --omarchy-cyan-ink: color-mix(in oklab, var(--omarchy-role-cyan) 30%, var(--omarchy-foreground));
+  --omarchy-blue-ink: color-mix(in oklab, var(--omarchy-role-blue) 30%, var(--omarchy-foreground));
+  --omarchy-magenta-ink: color-mix(in oklab, var(--omarchy-role-magenta) 30%, var(--omarchy-foreground));
+  --omarchy-brown-ink: color-mix(in oklab, var(--omarchy-role-brown) 30%, var(--omarchy-foreground));
+  --omarchy-accent-fill: color-mix(in oklab, var(--omarchy-role-accent) 20%, var(--omarchy-foreground));
+  --omarchy-red-fill: color-mix(in oklab, var(--omarchy-role-red) 20%, var(--omarchy-foreground));
+  --omarchy-orange-fill: color-mix(in oklab, var(--omarchy-role-orange) 20%, var(--omarchy-foreground));
+  --omarchy-green-fill: color-mix(in oklab, var(--omarchy-role-green) 20%, var(--omarchy-foreground));
+  --omarchy-accent-fill-hover: color-mix(in oklab, var(--omarchy-role-accent) 15%, var(--omarchy-foreground));
+  --omarchy-red-fill-hover: color-mix(in oklab, var(--omarchy-role-red) 15%, var(--omarchy-foreground));
+  --omarchy-orange-fill-hover: color-mix(in oklab, var(--omarchy-role-orange) 15%, var(--omarchy-foreground));
+  --omarchy-green-fill-hover: color-mix(in oklab, var(--omarchy-role-green) 15%, var(--omarchy-foreground));
+  --omarchy-accent-fill-active: color-mix(in oklab, var(--omarchy-role-accent) 10%, var(--omarchy-foreground));
+  --omarchy-red-fill-active: color-mix(in oklab, var(--omarchy-role-red) 10%, var(--omarchy-foreground));
+  --omarchy-orange-fill-active: color-mix(in oklab, var(--omarchy-role-orange) 10%, var(--omarchy-foreground));
+  --omarchy-green-fill-active: color-mix(in oklab, var(--omarchy-role-green) 10%, var(--omarchy-foreground));
+  --omarchy-accent-tint: color-mix(in oklab, var(--omarchy-role-accent) 9%, var(--omarchy-background));
+  --omarchy-red-tint: color-mix(in oklab, var(--omarchy-role-red) 9%, var(--omarchy-background));
+  --omarchy-orange-tint: color-mix(in oklab, var(--omarchy-role-orange) 9%, var(--omarchy-background));
+  --omarchy-yellow-tint: color-mix(in oklab, var(--omarchy-role-yellow) 9%, var(--omarchy-background));
+  --omarchy-green-tint: color-mix(in oklab, var(--omarchy-role-green) 9%, var(--omarchy-background));
+  --omarchy-accent-halo: color-mix(in oklab, var(--omarchy-role-accent) 30%, transparent);
+  --omarchy-selection-bg: var(--omarchy-selection-background, color-mix(in oklab, var(--omarchy-role-accent) 12%, var(--omarchy-background)));
+  --omarchy-selection-fg: var(--omarchy-selection-foreground, var(--omarchy-foreground));
+
+  --omarchy-graph-node: color-mix(in oklab, var(--omarchy-foreground) 60%, var(--omarchy-background));
+  --omarchy-graph-neighbor: color-mix(in oklab, var(--omarchy-role-accent) 65%, var(--omarchy-foreground));
+  --omarchy-graph-muted-node: color-mix(in oklab, var(--omarchy-foreground) 30%, var(--omarchy-background));
+  --omarchy-graph-edge: color-mix(in oklab, var(--omarchy-foreground) 35%, var(--omarchy-background));
+  --omarchy-graph-muted-edge: color-mix(in oklab, var(--omarchy-foreground) 18%, var(--omarchy-background));
+  --omarchy-diagram-group: color-mix(in oklab, var(--omarchy-foreground) 4%, transparent);
+  --omarchy-content-filter: none;
+
+  background-color: var(--omarchy-background);
+  color: var(--omarchy-foreground);
+}
+
+html[data-omarchy-active="true"][data-omarchy-mode="light"] {
+  color-scheme: light;
+}
+
+html[data-omarchy-active="true"][data-omarchy-mode="dark"] {
+  color-scheme: dark;
+  --omarchy-shadow: color-mix(in oklab, var(--omarchy-darker-background, var(--omarchy-background)) 60%, transparent);
+  --omarchy-role-red: var(--omarchy-bright-red, var(--omarchy-red, var(--omarchy-role-accent)));
+  --omarchy-role-yellow: var(--omarchy-bright-yellow, var(--omarchy-yellow, var(--omarchy-role-accent)));
+  --omarchy-role-green: var(--omarchy-bright-green, var(--omarchy-green, var(--omarchy-role-accent)));
+  --omarchy-role-cyan: var(--omarchy-bright-cyan, var(--omarchy-cyan, var(--omarchy-role-accent)));
+  --omarchy-role-blue: var(--omarchy-bright-blue, var(--omarchy-blue, var(--omarchy-role-accent)));
+  --omarchy-role-magenta: var(--omarchy-bright-magenta, var(--omarchy-magenta, var(--omarchy-role-accent)));
+}
+
+html[data-omarchy-active="true"] ::selection {
+  background-color: var(--omarchy-selection-bg);
+  color: var(--omarchy-selection-fg);
+}
+
+/* Roam's own base sheet explicitly colors this container. Its plain inherited
+   labels must not retain the stock dark ink on a locally dark surface. */
+html[data-omarchy-active="true"] .roam-sidebar-container {
+  color: var(--omarchy-foreground);
+}
+
+/* Chrome/native controls and plugin components inherit the same local mode. */
+html[data-omarchy-active="true"] .blueprint-dm-toggle {
+  display: none !important;
+}
+
+/* Blueprint's generic icon rule otherwise puts normal foreground on an inverse
+   action. Inherit the action's already paired ink, without touching content SVGs. */
+html[data-omarchy-active="true"] .bp3-button:is(.bp3-intent-primary, .bp3-intent-danger, .bp3-intent-success, .bp3-intent-warning):not(.bp3-minimal):not(.bp3-outlined) > .bp3-icon,
+html[data-omarchy-active="true"] .bp3-menu-item.bp3-intent-primary.bp3-active > .bp3-icon {
+  color: inherit;
+}
+
+/* Roam's checkbox tick is drawn by its own base sheet, rather than Blueprint. */
+html[data-omarchy-active="true"] .check-container input:checked ~ .checkmark:after {
+  border-color: var(--omarchy-background);
+}

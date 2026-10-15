@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Roam Omarchy</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="protocol.js" defer></script>
+    <script src="popup.js" defer></script>
+  </head>
+  <body>
+    <h1>Roam Omarchy</h1>
+    <p id="status" role="status" aria-live="polite">Checking local status…</p>
+    <p id="details"></p>
+    <button id="retry" type="button" hidden>Retry native host</button>
+    <form id="options">
+      <label class="enabled"><input id="enabled" name="enabled" type="checkbox"> Follow Omarchy locally</label>
+      <label for="graphs">Allowed graphs</label>
+      <textarea id="graphs" name="graphs" rows="4" spellcheck="false" aria-describedby="graph-help"></textarea>
+      <p id="graph-help">One exact graph name per line. Enter * only to explicitly allow every graph.</p>
+      <button type="submit">Save local options</button>
+      <p id="saved" role="status" aria-live="polite"></p>
+    </form>
+    <footer>Only this browser is affected. No Roam settings or graph content are changed.</footer>
+  </body>
+</html>

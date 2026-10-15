@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+"""Unregister only unchanged files owned by this native-host installation."""
+
+from pathlib import Path
+import sys
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "native"))
+from install import main
+
+sys.exit(main("uninstall"))

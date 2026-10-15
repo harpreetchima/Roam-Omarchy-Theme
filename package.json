@@ -1,9 +1,12 @@
 {
-  "name": "blueprint",
+  "name": "roam-omarchy-theme",
   "version": "1.0.0",
-  "description": "Beautiful light and dark theme for Roam Research based on blueprint.js",
+  "description": "Device-local Omarchy palettes for Blueprint in Roam Research",
   "main": "src/index.ts",
   "scripts": {
+    "build:browser": "node scripts/build-browser.mjs",
+    "test:browser": "node --test tests/browser-protocol.test.cjs",
+    "test:native": "/usr/bin/python3 -m unittest discover -s tests -p 'test_native*.py'",
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "webpack --watch",
