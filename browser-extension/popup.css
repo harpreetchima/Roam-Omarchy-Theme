@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+  font: 1rem/1.5 "InterVariable", "Inter", system-ui, sans-serif;
+  --muted: #53606d;
+  --border: color-mix(in srgb, CanvasText 12%, transparent);
+  --warning: #854800;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { --muted: #b7c1cc; --warning: #ffcc80; }
+}
+
+body { width: 22rem; max-width: calc(100vw - 2rem); margin: 1rem; font: inherit; -webkit-font-smoothing: antialiased; }
+h1 { margin: 0 0 12px; font-size: 18px; font-weight: 600; text-wrap: balance; }
+p { margin: 8px 0; }
+#status { font-weight: 600; }
+#status[data-warning="true"] { color: var(--warning); }
+#details, #graph-help, footer { color: var(--muted); }
+#details { white-space: pre-line; }
+form { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px; }
+label { display: block; margin-bottom: 6px; }
+.enabled { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+textarea { width: 100%; box-sizing: border-box; padding: 8px; font: inherit; resize: vertical; }
+button { padding: 6px 10px; border: 1px solid var(--border); border-radius: 3px; font: inherit; cursor: pointer; }
+button[type="submit"] { background: #106ba3; border-color: #106ba3; color: #fff; }
+button[type="submit"]:hover { background: #0e5a8a; border-color: #0e5a8a; }
+#retry { padding: 3px 8px; }
+button:focus-visible { outline: 2px solid #48aff0; outline-offset: 2px; }
+textarea:focus-visible { outline: 2px solid #48aff0; outline-offset: -1px; }
+.enabled input { width: 20px; height: 20px; flex-shrink: 0; accent-color: #106ba3; }
+#saved { min-height: 1.5em; }
+footer { border-top: 1px solid var(--border); padding-top: 10px; }
+@media (min-width: 640px) { :root { font-size: 14px; } .enabled input { width: 16px; height: 16px; } }

@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Roam Omarchy",
+  "version": "1.0.0",
+  "description": "Follow the local Omarchy palette in supported Blueprint themes, without changing your Roam graph.",
+  "minimum_chrome_version": "111",
+  "permissions": ["nativeMessaging", "storage"],
+  "background": {
+    "service_worker": "worker.js"
+  },
+  "action": {
+    "default_title": "Roam Omarchy",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://roamresearch.com/*"],
+      "js": ["protocol.js", "theme.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": false,
+      "match_about_blank": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'"
+  }
+}
