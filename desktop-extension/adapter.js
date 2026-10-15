@@ -1,12 +1,20 @@
 (() => {
   "use strict";
 
-  function createAdapter({ theme, protocol, styles, uiCss }) {
+  function createAdapter({ theme, protocol, styles, uiCss, extensionAPI }) {
     const source = globalThis.RoamOmarchyDesktopSource;
     const isDesktop = () => window.top === window && protocol.isRoamUrl(location.href) &&
       window.roamAlphaAPI?.platform?.isDesktop === true;
     // Do not create UI, open storage, observe styles, or ask for access elsewhere.
     if (!isDesktop()) return () => {};
+
+    const React = window.React;
+    if (typeof extensionAPI?.settings?.panel?.create !== "function" ||
+        typeof React?.createElement !== "function" || typeof React?.useRef !== "function" ||
+        typeof React?.useEffect !== "function") {
+      console.warn("Omarchy desktop needs Roam's custom settings panel API and provided React. Stock Blueprint is unchanged.");
+      return () => {};
+    }
 
     const storage = globalThis.RoamOmarchyDesktopStorage.createStorage();
     let options = source.defaultOptions();
@@ -237,7 +245,7 @@
     }
 
     view = globalThis.RoamOmarchyDesktopUI.createUI({
-      css: uiCss, onChoose: choose, onReconnect: reconnect, onForget: forget,
+      css: uiCss, React, onChoose: choose, onReconnect: reconnect, onForget: forget,
       onFollow: (enabled) => changeOptions({ ...options, enabled }),
       onScope(value) {
         if (disposed || !loaded) return;
@@ -277,8 +285,7 @@
       reconcile(true);
     });
 
-    reconcile();
-    void (async () => {
+    async function initialize() {
       const initialSelection = selectionRevision;
       const initialOptions = optionsRevision;
       try {
@@ -306,9 +313,9 @@
       }
       notice = permission === "granted" ? "" : "Saved folder needs read permission. Click Reconnect; permission is never requested automatically.";
       reconcile(true);
-    })();
+    }
 
-    return function dispose() {
+    function dispose() {
       if (disposed) return;
       disposed = true;
       selectionRevision++;
@@ -321,7 +328,34 @@
       controller.dispose();
       view.dispose();
       handle = null;
-    };
+    }
+
+    // Register only a custom component: builtin switch/input rows would persist
+    // values in graph-synced Depot settings instead of our device-local storage.
+    reconcile();
+    try {
+      const registered = extensionAPI.settings.panel.create({
+        tabTitle: "Omarchy",
+        settings: [{
+          id: "desktop-local-controls",
+          name: "Desktop palette",
+          description: "Options and folder access stay on this device; no graph settings are saved.",
+          action: { type: "reactComponent", component: view.Component },
+        }],
+      });
+      void Promise.resolve(registered).then(() => {
+        if (!disposed) return initialize();
+      }).catch(() => {
+        if (!disposed) {
+          console.warn("Omarchy desktop could not initialize its local settings controls. Stock Blueprint is restored.");
+          dispose();
+        }
+      });
+    } catch {
+      console.warn("Omarchy desktop could not register its local settings controls. Stock Blueprint is unchanged.");
+      dispose();
+    }
+    return dispose;
   }
 
   globalThis.RoamOmarchyDesktop = Object.freeze({ createAdapter });

@@ -18,39 +18,35 @@
     disconnected: "Stock Blueprint restored",
   });
 
-  function createUI({ css, onChoose, onReconnect, onFollow, onScope, onForget }) {
-    const host = document.createElement("aside");
+  function createUI({ React, css, onChoose, onReconnect, onFollow, onScope, onForget }) {
+    const host = document.createElement("div");
     host.id = "roam-omarchy-desktop-controls";
     host.setAttribute("aria-label", "Local Omarchy palette controls");
     const shadow = host.attachShadow({ mode: "open" });
     shadow.innerHTML = `
       <style></style>
-      <details>
-        <summary>Omarchy <span aria-hidden="true">·</span> <span id="summary-status"></span></summary>
-        <section aria-label="Omarchy settings on this device">
-          <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
-          <label class="follow" for="follow"><input id="follow" name="follow" type="checkbox"> Follow Omarchy on this device</label>
-          <p id="graph"></p>
-          <p>Read-only source: <code>current/theme/roam-omarchy-palette.json</code>.</p>
-          <div class="actions">
-            <button id="choose" type="button">Choose current folder</button>
-            <button id="reconnect" type="button">Reconnect</button>
-          </div>
-          <form>
-            <label for="scope">Allowed graphs, one per line</label>
-            <textarea id="scope" name="scope" rows="3" spellcheck="false" aria-describedby="scope-help scope-error"></textarea>
-            <p id="scope-help">Use <code>hosted:Sylva</code>, <code>offline:Name</code>, or explicitly <code>*</code> for all graphs. Empty means none.</p>
-            <p id="scope-error" role="alert" hidden></p>
-            <button class="primary" type="submit">Save graph scope</button>
-          </form>
-          <p id="notice" hidden></p>
-          <p id="storage" role="status" hidden></p>
-          <button id="forget" type="button">Stop and forget folder</button>
-          <p>Local-folder developer extensions need a manual reload after app startup. Folder permission is separate.</p>
-        </section>
-      </details>`;
+      <section aria-label="Omarchy settings on this device">
+        <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <label class="follow" for="follow"><input id="follow" name="follow" type="checkbox"> Follow Omarchy on this device</label>
+        <p id="graph"></p>
+        <p>Read-only source: <code>current/theme/roam-omarchy-palette.json</code>.</p>
+        <div class="actions">
+          <button id="choose" type="button">Choose current folder</button>
+          <button id="reconnect" type="button">Reconnect</button>
+        </div>
+        <form>
+          <label for="scope">Allowed graphs, one per line</label>
+          <textarea id="scope" name="scope" rows="3" spellcheck="false" aria-describedby="scope-help scope-error"></textarea>
+          <p id="scope-help">Use <code>hosted:Sylva</code>, <code>offline:Name</code>, or explicitly <code>*</code> for all graphs. Empty means none.</p>
+          <p id="scope-error" role="alert" hidden></p>
+          <button class="primary" type="submit">Save graph scope</button>
+        </form>
+        <p id="notice" hidden></p>
+        <p id="storage" role="status" hidden></p>
+        <button id="forget" type="button">Stop and forget folder</button>
+        <p>Local-folder developer extensions need a manual reload after app startup. Folder permission is separate.</p>
+      </section>`;
     shadow.querySelector("style").textContent = css;
-    (document.body || document.documentElement).append(host);
 
     const find = (id) => shadow.getElementById(id);
     const listeners = [];
@@ -69,6 +65,25 @@
 
     let renderedGraphs = null;
     let disposed = false;
+
+    function Component({ className, class: classProp } = {}) {
+      const container = React.useRef(null);
+      React.useEffect(() => {
+        const mount = container.current;
+        if (disposed || !mount) return;
+        // Keep the native controls and their draft alive between settings visits.
+        mount.append(host);
+        return () => {
+          // A newer settings mount may already own this same reusable host.
+          if (host.parentNode === mount) host.remove();
+        };
+      }, []);
+      return disposed ? null : React.createElement("div", {
+        className: ["roam-omarchy-desktop-settings", className, classProp].filter(Boolean).join(" "),
+        ref: container,
+      });
+    }
+
     function text(id, value) {
       const node = find(id);
       if (node.textContent !== value) node.textContent = value;
@@ -78,10 +93,10 @@
       find(id).hidden = !value;
     }
     return {
+      Component,
       render(state) {
         if (disposed) return;
         const status = statuses[state.status] || "Checking Blueprint";
-        text("summary-status", status);
         text("status", `${status}.`);
         text("graph", state.graph ? `Current graph: ${state.graph}.` : "No hosted or offline graph route.");
         find("follow").checked = state.options.enabled;

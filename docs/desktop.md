@@ -58,12 +58,19 @@ If you used the disposable folder-access probe, stop/forget its test folder and
 unload that probe first. Keep the normal Blueprint extension enabled; the new
 adapter is separate from both Blueprint and the temporary probe.
 
-1. In Roam desktop's developer extension controls, load the **built
-   `dist/desktop` directory**, not `desktop-extension`.
-2. Expand **Omarchy** at the bottom right. Click **Choose current folder** and
-   select `~/.local/state/omarchy/current`. The picker requests **read** access.
+1. Unload any previous Omarchy desktop adapter. In Roam desktop's developer
+   extension controls, load this checkout's **built `dist/desktop` directory**,
+   not `desktop-extension`. Keep normal Blueprint enabled.
+2. Open **Settings → Omarchy**. If no folder is saved, click **Choose current
+   folder** and select `~/.local/state/omarchy/current`. The picker requests
+   **read** access.
 3. Keep **Follow Omarchy on this device** enabled. The default graph allowlist
    is `hosted:Sylva`. Save any other exact hosted/offline names explicitly.
+
+Upgrading from the earlier bottom-right panel preserves the same client-local
+database, saved folder, and options. Do not run both adapters at once. The
+exporter does not need reinstalling; an existing granted folder needs no new
+selection. Use **Reconnect** if its permission needs renewing.
 
 The source handle must name a directory `current`; browser handles do not reveal
 an absolute path, so the adapter cannot establish that it is the intended
@@ -78,9 +85,12 @@ does not publish, install into a normal profile, or change Roam's startup setup.
 
 ## Local controls and lifecycle
 
-The collapsible control panel uses native controls and an isolated shadow tree.
-Choose/Reconnect require a trusted user click. On load, an existing handle's
-permission is only queried; timers and startup never request permission.
+The **Settings → Omarchy** tab uses one custom React component, with native
+controls in an isolated shadow tree. There is no floating panel. Closing
+Settings detaches the controls without stopping palette following or losing an
+unsaved graph-scope draft. Choose/Reconnect require a trusted user click. On
+load, an existing handle's permission is only queried; timers and startup never
+request permission.
 
 Graph scope accepts up to 100 entries, one per line: `hosted:Sylva`,
 `offline:Name`, or the explicit all-graphs opt-in `*`. Empty allows none. Hosted
@@ -92,18 +102,25 @@ the current route is checked again before delivering every asynchronous read.
 
 Options and the cloned handle are kept in IndexedDB database
 `roam-omarchy-desktop-local-v1`, store `local`, keys `options` and `directory`.
-No palette is persisted. No Depot setting rows or `extensionAPI.settings`
-values are created. A storage failure is visible in the panel and permits
-session-only use. This database is client-local, **not a security sandbox**:
-other trusted Roam extensions on the same origin can inspect or alter it.
+No palette is persisted. `extensionAPI.settings.panel.create` registers the tab,
+but its custom component saves no graph-synced setting values. Built-in
+automatically saving switch/input/select rows and settings get/set are not used.
+A storage failure is visible in the tab and permits session-only use. This
+database is client-local, **not a security sandbox**: other trusted Roam
+extensions on the same origin can inspect or alter it.
+
+The adapter uses React supplied by Roam; it bundles no React dependency. If
+React or the custom settings API is unavailable, or panel registration fails,
+stock Blueprint remains active. There is no fallback overlay.
 
 Turning following off, leaving graph scope, forgetting the folder, or losing
 permission restores the controller's owned stylesheet/root state. Forgetting
 does not revoke Chromium's underlying folder permission and leaves graph scope
 options intact. Unload cancels polling, invalidates outstanding reads and
 selection/storage callbacks, aborts pending storage transactions, disconnects
-the shared controller, and removes the panel and every registered listener.
-No commands, history patches, or app-global exports are registered.
+the shared controller, and removes the native controls and every registered
+listener. Roam removes the registered settings tab on extension unload. No
+commands, history patches, or app-global exports are registered.
 
 ## Validation and recovery
 
@@ -131,10 +148,12 @@ following restores only values still owned by this adapter.
 
 The user has separately verified directory picking, read-only access,
 IndexedDB handle cloning, reopening a replaced theme child, and persisted file
-permission after a genuine cold restart in Roam 0.0.40 / Electron 38. Those
-capability checks are not an end-to-end production-adapter activation test.
-Building and disposable verification do not authorize interaction with a live
-graph, installation into a normal profile, or live template activation.
+permission after a genuine cold restart in Roam 0.0.40 / Electron 38. The user
+subsequently activated the earlier floating-panel adapter and exporter and
+reported that palette following worked. The move into Settings still needs
+confirmation in the actual app. Building and disposable verification do not
+authorize interaction with a live graph, installation into a normal profile,
+or live template activation.
 
 Disposable checks exercised the real shared controller with mocked handles and
 routes: fresh-read gating, strict template normalization, scoped polling,
@@ -142,8 +161,11 @@ serialization, stale/third-failure recovery, permission loss, selection/unload
 races, and lifecycle restoration. The built ES module was parsed and checked for
 runtime imports and leaked source globals. An isolated browser fixture exercised
 the real IndexedDB write ordering/cancellation and the control panel at desktop
-and narrow dark-mode sizes. No permanent tests or live-app activation were added
-by these checks.
+and narrow dark-mode sizes. The Settings move was also checked with real React
+18 StrictMode, actual IndexedDB and OPFS handles: background following while
+closed, draft-preserving remount, trusted picker activation, local saves,
+stored-handle reload, and registration/unload failures. No permanent tests or
+live-app activation were added by these checks. See [verification](verification.md).
 
 ## Remove the exporter
 

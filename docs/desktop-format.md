@@ -95,6 +95,15 @@ using the existing build-time converter. Its single `extension.js` default
 export provides Roam `onload`/`onunload`; no imports, CDN, service, or runtime
 palette-code evaluation is needed.
 
+The generated `onload({ extensionAPI })` forwards the extension-scoped API to the
+adapter. It registers **Settings → Omarchy** through
+`extensionAPI.settings.panel.create`, with exactly one `reactComponent` row.
+The component uses Roam's provided `window.React` and mounts the reusable native
+shadow-tree controls only while Settings is open. Unmount detaches them but
+retains the local draft and leaves background polling active. Missing APIs or
+failed registration leave stock Blueprint unchanged; late registration after
+unload cannot start storage or polling. Roam owns removal of the registered tab.
+
 ## Desktop behavior
 
 - Default local graph allowlist is `hosted:Sylva`. Explicit names distinguish
@@ -109,9 +118,12 @@ palette-code evaluation is needed.
 - Brief missing-file/invalid-read gaps may hold the last valid palette with a
   stale status; after three consecutive failed reads restore normal Blueprint.
   Permission denial/revocation restores immediately and offers Reconnect.
-- Provide a small local status/control UI with follow, reconnect/choose, graph
-  scope and forget-handle controls. Do not use automatically persisting Depot
-  setting rows. Unload removes UI/listeners/timers and restores only owned state.
+- Provide follow, reconnect/choose, graph scope and forget-handle controls only
+  inside **Settings → Omarchy**, never in a floating overlay. Do not use
+  automatically persisting Depot setting rows or settings get/set. Keep the
+  existing IndexedDB database/store/keys unchanged. Unload removes native
+  UI/listeners/timers and restores only owned state; a disposed component must
+  not remount its controls.
 - Local-folder developer extensions still need a manual reload after app
   startup. Persisted folder permission and extension autostart are separate.
   No publication, normal-profile installation, or live template activation is

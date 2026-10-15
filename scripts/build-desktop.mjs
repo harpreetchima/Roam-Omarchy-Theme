@@ -56,8 +56,8 @@ try {
     classic.map((text, index) => `\n// ${relative(root, scripts[index])}\n(function(globalThis) {\n${text}\n})(scope);\n`).join("") +
     `\nconst theme = ${JSON.stringify(theme)};\nconst uiCss = ${JSON.stringify(uiCss)};\n` +
     `let cleanup = () => {};\nexport default {\n` +
-    `  onload() {\n    cleanup();\n` +
-    `    cleanup = scope.RoamOmarchyDesktop.createAdapter({ theme, protocol: scope.RoamOmarchyProtocol, styles: scope.RoamOmarchyStyles, uiCss });\n` +
+    `  onload({ extensionAPI } = {}) {\n    cleanup();\n` +
+    `    cleanup = scope.RoamOmarchyDesktop.createAdapter({ theme, protocol: scope.RoamOmarchyProtocol, styles: scope.RoamOmarchyStyles, uiCss, extensionAPI });\n` +
     `    return cleanup;\n  },\n  onunload() { cleanup(); cleanup = () => {}; }\n};\n`;
 
   // Check all inputs before touching the two known generated files; no installer runs.
