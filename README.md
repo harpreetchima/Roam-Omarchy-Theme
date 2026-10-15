@@ -4,17 +4,22 @@ Follow your current [Omarchy](https://github.com/omacom/omarchy) palette in
 [Roam Research](https://roamresearch.com), while keeping the layout and component
 styling of Alexander Rink's [Blueprint](https://github.com/rcvd/blueprint).
 
-This is a **device-local Chrome companion**, not another Roam Depot installation.
-Keep normal Blueprint enabled. The companion temporarily substitutes its
-stylesheet in this browser, then supplies the selected desktop palette through a
-small read-only native helper. It does not write colors into your graph, disable
-Blueprint, or change the appearance of your other devices.
+There are two **device-local companions**. Keep normal Blueprint enabled:
+
+- **Chrome:** a Manifest V3 extension receives the current palette through a
+  read-only native helper. Follow the Chrome instructions below.
+- **Roam desktop:** a client-local developer extension reads an Omarchy-generated
+  palette JSON file through a user-approved, read-only folder handle. Follow
+  [Desktop setup](docs/desktop.md) and [Palette exporter setup](docs/desktop-palette.md).
+  No server, application patch, graph token, or Node integration is needed.
+
+Both temporarily substitute the supported Blueprint stylesheet in the current
+document. Neither writes colors into graph content/settings, disables Blueprint,
+or changes the appearance of other devices.
 
 ```text
-Omarchy's resolved current palette
-  -> local native helper (no listening server)
-  -> Chrome extension worker
-  -> Blueprint CSS variables in an allowed Roam graph
+Chrome:  Omarchy palette -> native helper -> Chrome companion -> Blueprint variables
+Desktop: Omarchy template -> local JSON -> approved read-only folder -> Roam adapter
 ```
 
 There is no list of Omarchy theme names: new themes work when Omarchy resolves a
@@ -38,6 +43,11 @@ browser receives finished CSS and never rewrites colors in page-provided CSS.
   build.** The older Roam extension's dependencies are retained separately.
 
 ## Build and activation
+
+These are the **Chrome** instructions. For desktop, use `npm run build:desktop`
+and its separate [setup guide](docs/desktop.md). Local-folder developer
+extensions need reloading after Roam starts; saved palette-folder access and
+extension autostart are different capabilities.
 
 ```sh
 npm run build:browser

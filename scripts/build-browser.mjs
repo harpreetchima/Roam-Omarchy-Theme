@@ -7,6 +7,7 @@ import { supportedHashes, upstreamCommit } from "../src/omarchy/upstream.mjs";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const source = join(root, "browser-extension");
 const output = join(root, "dist", "chrome");
+const controller = join(root, "src", "shared", "style-controller.js");
 
 async function regularTree(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -30,11 +31,12 @@ try {
     manifest.background?.service_worker,
     manifest.action?.default_popup,
     ...(manifest.content_scripts ?? []).flatMap((script) => [...(script.js ?? []), ...(script.css ?? [])]),
-  ].filter((path) => path && path !== "theme.js");
+  ].filter((path) => path && !["theme.js", "controller.js"].includes(path));
   for (const path of declaredFiles) {
     const absolute = resolve(source, path);
     if (!absolute.startsWith(source + "/") || !(await lstat(absolute)).isFile()) throw new Error(`Missing browser source file declared by manifest: ${path}`);
   }
+  if (!(await lstat(controller)).isFile()) throw new Error("Shared stylesheet controller must be a regular file.");
   const [blueprint, palette] = await Promise.all([
     readFile(join(root, "src", "themes", "blueprint.css"), "utf8"),
     readFile(join(root, "src", "omarchy", "palette.css"), "utf8"),
@@ -50,6 +52,7 @@ try {
   if (!dist.isDirectory() || dist.isSymbolicLink()) throw new Error("Refusing to build through a linked dist directory.");
   await rm(output, { recursive: true, force: true });
   await cp(source, output, { recursive: true });
+  await cp(controller, join(output, "controller.js"));
   await writeFile(join(output, "theme.js"), bundle, "utf8");
   console.log(`Built ${relative(root, output)} (${report.replacements} color fallbacks, ${report.darkMedia} gated OS-dark branches).`);
 } catch (error) {

@@ -95,3 +95,79 @@ user has intentionally selected a new one during the trial.
 Local off should restore the original stylesheet/root state. When disabling or
 uninstalling the Chrome extension itself, reload Roam to remove content-script
 changes. Confirm that other devices and existing Omarchy hooks are unaffected.
+
+## Desktop transport evidence
+
+Before implementing the desktop adapter, a disposable client-local developer
+extension was tested in the actual Roam 0.0.40 desktop app (Electron 38.2.0,
+Chromium 140). The user reported read-only directory selection, a handle stored
+in client-local IndexedDB, and successful reads of both test palette changes
+across replacement of the child theme directory. After a genuine full app
+restart, the saved handle was granted and reads resumed without another folder
+selection. Independent process inspection confirmed that the old Roam process
+had exited. No graph content, normal theme, or installed application file was
+changed by that probe.
+
+The permission test used a palette folder outside the developer-extension code
+folder, so loading the extension did not implicitly select its palette folder.
+The probe's original directory-change counter was corrected: Chromium's
+`isSameEntry` compares handle paths, not OS directory inode identity. Successful
+changed-palette reads and independent fixture directory identities established
+the replacement behavior.
+
+This proves the file-access mechanism in the tested installation, not activation
+of the finished desktop adapter. Local-folder extension startup still requires
+Roam's documented manual developer-extension reload; it is separate from saved
+palette-folder permission.
+
+The stylesheet ownership logic is now shared rather than copied into the two
+transports. All 11 existing Chrome browser cases retain their assertions; their
+fixture also loads the shared controller. A new isolated Chrome/native-helper
+smoke check verified that the refactored unpacked package applies Catppuccin and
+that its real popup off/save action restores the exact original stylesheet and
+root variables. That test used only a disposable Chrome HOME/profile/native-host
+registration, which was removed afterward; the user's working installation was
+not rebuilt, reloaded, or reconfigured.
+
+## Desktop implementation checks
+
+- Both dependency-free builds pass: `npm run build:desktop` and
+  `npm run build:browser`. The existing 33 native and 11 browser tests pass.
+  No new permanent test suite was added.
+- The desktop exporter's disposable verification exercised the installed Omarchy
+  template renderer against all 22 packaged palettes, five optional/legacy
+  fixtures, and four invalid fixtures, entirely in fake HOME. Python message
+  validation rejected 29 malformed cases. Installer/uninstaller previews,
+  no-follow traversal, bounds, collisions, ownership, changed-file retention,
+  resolver cleanup, rollback, and persistent seed-backup survival were checked
+  with disposable files. No real theme-set/app-retint command was run.
+- Desktop-specific disposable checks covered 15 parsing/scope/freshness/failure/
+  permission/race/lifecycle/module-isolation cases, eight actual IndexedDB
+  ordering/cancellation cases, and the controls' narrow/dark rendering.
+- A full-package isolated Chromium fixture used **real OPFS directory handles**
+  and actual IndexedDB, with an explicitly simulated desktop flag and picker.
+  The production installer seeded a fake HOME; the installed Omarchy templater
+  rendered a light palette into a replacement fake theme directory. That exact
+  output then passed through the adapter's file reader and shared controller:
+  light mode prevailed over OS-dark without a document reload.
+- The same fixture passed unknown-palette/optional-placeholder normalization,
+  invalid-file rejection and three-failure stock restoration, valid recovery,
+  hosted/offline same-name exclusion, allowed-route return, unknown/supported
+  stylesheet replacement, unload restoration, and stored-handle reload without
+  another picker. Authored diagram color and private source exports were checked.
+- Simulated permission loss restored stock and did not prompt. A synthetic click
+  could not request permission; an actual trusted Reconnect click recovered.
+  Actual follow-off and forget controls restored the exact original stylesheet
+  and removed only the saved directory record. With the desktop flag false,
+  the packaged module created no UI, opened no storage, and changed no source.
+- Independent review found and helped fix a shared-controller eligibility race:
+  silent history changes must be rechecked during reconciliation and just before
+  async stylesheet application. A disposable differential reproduced the old
+  regression and verified the fix. Final review found no further confirmed
+  actionable issues. Seed collision backups were also moved outside Omarchy's
+  replaceable theme tree and verified to survive a switch.
+
+OPFS/mocked-picker integration is not presented as a native-dialog or live-graph
+activation test. The earlier user-run actual-Roam probe supplies separate native
+file-access/cold-restart evidence. The completed desktop adapter and real user
+template still require deliberate activation and a real graph/theme-switch trial.

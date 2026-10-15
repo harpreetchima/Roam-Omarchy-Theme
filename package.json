@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build:browser": "node scripts/build-browser.mjs",
+    "build:desktop": "node scripts/build-desktop.mjs",
     "test:browser": "node --test tests/browser-protocol.test.cjs",
     "test:native": "/usr/bin/python3 -m unittest discover -s tests -p 'test_native*.py'",
     "build": "webpack",
