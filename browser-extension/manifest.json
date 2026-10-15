@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "matches": ["https://roamresearch.com/*"],
-      "js": ["protocol.js", "theme.js", "content.js"],
+      "js": ["protocol.js", "theme.js", "controller.js", "content.js"],
       "run_at": "document_idle",
       "all_frames": false,
       "match_about_blank": false

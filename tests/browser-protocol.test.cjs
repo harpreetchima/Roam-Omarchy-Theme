@@ -321,6 +321,7 @@ function contentFixture({ original = "supported original", deferredHash = false 
     },
   });
   vm.runInContext(script("protocol.js"), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/shared/style-controller.js"), "utf8"), context);
   vm.runInContext(script("content.js"), context);
   return {
     root, head, style, ports, runtime, digests, timer,
