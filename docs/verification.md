@@ -169,5 +169,36 @@ not rebuilt, reloaded, or reconfigured.
 
 OPFS/mocked-picker integration is not presented as a native-dialog or live-graph
 activation test. The earlier user-run actual-Roam probe supplies separate native
-file-access/cold-restart evidence. The completed desktop adapter and real user
-template still require deliberate activation and a real graph/theme-switch trial.
+file-access/cold-restart evidence. The user subsequently activated the exporter
+and earlier floating-panel adapter and reported that palette following worked.
+
+## Settings relocation checks
+
+The move into **Settings → Omarchy** changes only desktop registration and
+controls. Its desktop build passes. A disposable Chrome for Testing 153 profile
+loaded the built package with real React 18.2 StrictMode, actual IndexedDB, and
+OPFS directory handles. The desktop flag, settings API and read-only picker were
+explicit test doubles; graph-synced settings get/set threw if called.
+
+- With Settings closed, following started from the existing local database and
+  saved handle without a picker. No controls were attached to the document.
+- Opening Settings mounted exactly one static, in-flow controls host. Closing
+  it removed the host while a new light palette still applied. Reopening kept
+  an unsaved graph-scope draft through real React unmount/remount.
+- Actual follow and save-scope clicks persisted to the unchanged local schema.
+  Follow-off restored the exact supported original Blueprint stylesheet hash;
+  following resumed when enabled. A trusted Choose click retained transient
+  user activation and requested read mode only.
+- Unload restored Blueprint and removed controls. Reopening a retained disposed
+  component could not resurrect them. Missing API/React, throwing or rejected
+  registration, and registration resolving after unload opened no storage and
+  started no polling. A subsequent normal load reused saved options and handle
+  without another picker.
+- Rendered dark controls had no horizontal overflow at 360px; the desktop layout
+  was also inspected. The fixture reported no page errors. Independent Sol Max
+  review found no actionable correctness/privacy issues in the four source/build
+  files. No permanent tests or runtime dependencies were added.
+
+The settings move has not yet been activated in the user's actual Roam app.
+Documented API registration and Roam-managed tab removal still need that final
+live confirmation. The working prior package and real exporter were left alone.

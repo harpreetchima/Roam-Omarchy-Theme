@@ -9,8 +9,9 @@ There are two **device-local companions**. Keep normal Blueprint enabled:
 - **Chrome:** a Manifest V3 extension receives the current palette through a
   read-only native helper. Follow the Chrome instructions below.
 - **Roam desktop:** a client-local developer extension reads an Omarchy-generated
-  palette JSON file through a user-approved, read-only folder handle. Follow
-  [Desktop setup](docs/desktop.md) and [Palette exporter setup](docs/desktop-palette.md).
+  palette JSON file through a user-approved, read-only folder handle. Its controls
+  live in **Settings → Omarchy**. Follow [Desktop setup](docs/desktop.md) and
+  [Palette exporter setup](docs/desktop-palette.md).
   No server, application patch, graph token, or Node integration is needed.
 
 Both temporarily substitute the supported Blueprint stylesheet in the current
@@ -96,9 +97,9 @@ universally accessible without changing its colors.
 
 This fork preserves Blueprint's layout, spacing, typography, and component rules
 while replacing palette-dependent colors with semantic variables and literal
-fallbacks. It is not a new layout or a mobile/desktop Roam integration. The
-original Roam entry point/build remains in the repository; use `build:browser`,
-not its legacy build script, for this companion.
+fallbacks. It is not a new layout or a modification to Roam's installed
+application. The original Roam entry point/build remains in the repository; use
+`build:browser` or `build:desktop`, not its legacy build script, for the companions.
 
 Blueprint is by **Alexander Rink** and declares the MIT license in its package
 metadata. Its original README and support links are preserved in

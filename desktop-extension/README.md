@@ -15,10 +15,11 @@ From the repository root, with Node.js 20 or later:
 node scripts/build-desktop.mjs
 ```
 
-No dependency installation is needed. In the Roam desktop app's developer
-extension controls, load the **built `dist/desktop` folder**, containing this
-README and `extension.js`. Do not load the `desktop-extension` source folder.
-Building does not install an extension or activate an Omarchy template.
+No dependency installation is needed. Unload any previous Omarchy desktop
+adapter, then use Roam desktop's developer extension controls to load this
+checkout's **built `dist/desktop` folder**, containing this README and
+`extension.js`. Do not load the `desktop-extension` source folder. Building does
+not install an extension or activate an Omarchy template.
 
 **Local-folder developer extensions need a manual reload after app startup.**
 Persisted file permission is separate from extension startup; this package does
@@ -28,8 +29,8 @@ stylesheet/root values. Leave normal Blueprint enabled throughout.
 ## Connect the read-only source
 
 First prepare the palette exporter described in `docs/desktop.md` in the source
-repository. Expand **Omarchy** at the bottom right, click **Choose current
-folder**, and select exactly:
+repository. Open **Settings → Omarchy**, click **Choose current folder** if no
+folder is saved, and select exactly:
 
 ```text
 ~/.local/state/omarchy/current
@@ -44,6 +45,12 @@ On a later load, the adapter checks an existing handle's permission without a
 prompt. If access is needed, click **Reconnect**. Choose/Reconnect must be real
 user clicks, not programmatic button clicks. No stale saved palette is applied:
 every extension load waits for a fresh valid read.
+
+Upgrading from the bottom-right panel keeps the same local options and saved
+folder. Do not run both adapters at once. No exporter reinstall or new folder
+selection is needed when the existing handle still has permission. The controls
+now appear only in Settings; closing it keeps following active and preserves an
+unsaved graph-scope draft.
 
 ## Scope and failures
 
@@ -62,9 +69,11 @@ when detected and stops reads until a click reconnects the folder.
 **Stop and forget folder** removes this extension's saved handle and restores
 Blueprint. It does not revoke Chromium's underlying permission. Options and the
 handle live only in the client-local IndexedDB database
-`roam-omarchy-desktop-local-v1`, not `extensionAPI.settings`. Other trusted Roam
-extensions on the same origin can see that database: this is not a sandbox
-against them.
+`roam-omarchy-desktop-local-v1`. The tab uses one custom component rather than
+graph-synced setting controls; settings get/set are never used. Other trusted
+Roam extensions on the same origin can see that database: this is not a sandbox
+against them. Roam's provided React and custom settings API are required; if
+registration fails, stock Blueprint stays active without a floating fallback.
 
 The palette file is bounded to 64 KiB, limited to the known version-1 protocol,
 and never evaluated as code or CSS. Unsupported Blueprint stylesheet hashes are
